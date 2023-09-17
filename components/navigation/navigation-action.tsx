@@ -8,7 +8,7 @@ export const NavigationAction = () => {
   const { onOpen } = useModal();
   return (
     <div>
-      <ActionTooltip side="right" align="center" label="create a server">
+      <ActionTooltip side="right" align="center" label="Add a Server">
         <button
           onClick={() => {
             onOpen("createServer");

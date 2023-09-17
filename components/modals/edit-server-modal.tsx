@@ -30,6 +30,7 @@ import { Button } from "@/components/ui/button";
 import FileUpload from "@/components/file-upload";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/hooks/use-modal-store";
+import { useEffect } from "react";
 
 const schema = z.object({
   name: z.string().min(1, {
@@ -39,12 +40,12 @@ const schema = z.object({
     message: "Server image is required.",
   }),
 });
-export const CreateServerModal = () => {
-  const { isOpen, onClose, type } = useModal();
+export const EditServerModal = () => {
+  const { isOpen, onClose, type, data } = useModal();
   const router = useRouter();
 
-  const isModalOpen = isOpen && type === "createServer";
-
+  const isModalOpen = isOpen && type === "editServer";
+  const { server } = data;
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -53,11 +54,18 @@ export const CreateServerModal = () => {
     },
   });
 
+  useEffect(() => {
+    if (server) {
+      form.setValue("name", server.name);
+      form.setValue("imageUrl", server.imageUrl);
+    }
+  }, [form, server]);
+
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (data: z.infer<typeof schema>) => {
     await axios
-      .post("/api/servers", data)
+      .patch(`/api/servers/${server?.id}`, data)
       .then((res) => {
         form.reset();
         router.refresh();
@@ -87,7 +95,7 @@ export const CreateServerModal = () => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <div className="space-y-8 px-6">
-              <div className="flex items-center justify-center text-center py-5 dark:bg-[#1e1f22] ">
+              <div className="flex items-center justify-center text-center py-5  dark:bg-[#1e1f22] ">
                 <FormField
                   control={form.control}
                   name="imageUrl"
@@ -126,7 +134,7 @@ export const CreateServerModal = () => {
             </div>
             <DialogFooter className="bg-gray-100 dark:bg-[#1e1f22] px-6 py-4">
               <Button variant={"primary"} disabled={isLoading}>
-                Create
+                Save
               </Button>
             </DialogFooter>
           </form>

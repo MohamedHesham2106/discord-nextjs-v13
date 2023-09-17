@@ -29,7 +29,7 @@ export const NavigationItem = ({ id, imageUrl, name }: NavigationItemProps) => {
           className={cn(
             "absolute left-0 bg-primary rounded-r-full transition-all w-[4px]",
             params?.serverId !== id && "group-hover:h-[20px]",
-            params?.serverId === id ? "h-[36px]" : "h-[16px]"
+            params?.serverId === id ? "h-[36px]" : "h-[12px]"
           )}
         />
         <div
@@ -38,7 +38,7 @@ export const NavigationItem = ({ id, imageUrl, name }: NavigationItemProps) => {
             params?.serverId === id && "bg-primary/10 text-primary"
           )}
         >
-          <Image fill src={imageUrl} alt="Channel" />
+          <Image fill src={imageUrl} alt="Channel" className="object-cover" />
         </div>
       </button>
     </ActionTooltip>

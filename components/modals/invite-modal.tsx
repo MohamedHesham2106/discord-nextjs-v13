@@ -50,27 +50,36 @@ export const InviteModal = () => {
   };
   return (
     <Dialog open={isModalOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-white text-black p-0 overflow-hidden">
-        <DialogHeader className="pt-8 px-6">
-          <DialogTitle className="text-2xl text-center font-bold">
-            Invite Friends
+      <DialogContent className="dark:bg-[#313338] bg-[#f2f3f5] text-black  overflow-hidden px-2">
+        <DialogHeader className="pt-2 px-6">
+          <DialogTitle className="text-2xl text-center font-bold dark:text-[#cdd0d3] text-zinc-500">
+            Invite Friends to {server?.name}
           </DialogTitle>
         </DialogHeader>
         <div className="p-6">
-          <Label className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70">
-            Server Invite Link
+          <Label className="uppercase text-xs font-bold text-zinc-500 dark:text-[#cdd0d3]">
+            Send Server Link to a friend
           </Label>
-          <div className="flex items-center mt-2 gap-x-2">
+          <div className="bg-black dark:bg-[#1e1f22] rounded mt-2 items-center  gap-x-2 flex pr-2 py-1.5 justify-between">
             <Input
               disabled={isLoading}
-              className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
+              className="dark:bg-[#1e1f22] bg-transparent border-0 focus-visible:ring-0 dark:text-[#cdd0d3] text-white focus-visible:ring-offset-0"
               value={inviteUrl}
             />
-            <Button disabled={isLoading} onClick={onCopyHandler} size="icon">
+            <Button
+              disabled={isLoading}
+              className="w-[86px] h-10"
+              onClick={onCopyHandler}
+              size="icon"
+            >
               {copied ? (
-                <Check className="w-4 h-4" />
+                <Button className="text-white border-none bg-indigo-500 hover:bg-indigo-500 w-[86px] h-10">
+                  Copied!
+                </Button>
               ) : (
-                <Copy className="w-4 h-4 " />
+                <Button className="text-white border-none bg-indigo-500 hover:bg-indigo-800  w-[86px] h-10 ">
+                  Copy
+                </Button>
               )}
             </Button>
           </div>
@@ -79,7 +88,7 @@ export const InviteModal = () => {
             disabled={isLoading}
             variant="link"
             size="sm"
-            className="text-xs text-zinc-500 mt-4"
+            className="text-xs text-zinc-500/90 dark:text-[#cdd0d3] mt-4"
           >
             Generate a new link
             <RefreshCw className="w-4 h-4 ml-2" />
