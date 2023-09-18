@@ -38,6 +38,7 @@ import {
 } from "@/components/ui/select";
 import { Hash } from "lucide-react";
 import { ChannelType } from "@prisma/client";
+import { useEffect } from "react";
 
 const schema = z.object({
   name: z
@@ -51,9 +52,10 @@ const schema = z.object({
   type: z.nativeEnum(ChannelType),
 });
 export const CreateChannelModal = () => {
-  const { isOpen, onClose, type } = useModal();
+  const { isOpen, onClose, type, data } = useModal();
   const router = useRouter();
   const params = useParams();
+  const { channelType } = data;
 
   const isModalOpen = isOpen && type === "createChannel";
 
@@ -61,9 +63,16 @@ export const CreateChannelModal = () => {
     resolver: zodResolver(schema),
     defaultValues: {
       name: "",
-      type: ChannelType.TEXT,
+      type: channelType || ChannelType.TEXT,
     },
   });
+  useEffect(() => {
+    if (channelType) {
+      form.setValue("type", channelType);
+    } else {
+      form.setValue("type", ChannelType.TEXT);
+    }
+  }, [channelType, form]);
 
   const isLoading = form.formState.isSubmitting;
 
@@ -127,7 +136,9 @@ export const CreateChannelModal = () => {
                             key={type}
                             value={type}
                           >
-                            {type.toLowerCase()}
+                            {type === ChannelType.VOICE
+                              ? "Audio"
+                              : type.toLowerCase()}
                           </SelectItem>
                         ))}
                       </SelectContent>

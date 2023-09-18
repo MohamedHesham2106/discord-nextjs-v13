@@ -3,6 +3,7 @@ import { redirectToSignIn } from "@clerk/nextjs";
 import { prisma } from "@/lib/db";
 import { redirect } from "next/navigation";
 import { ServerSidebar } from "@/components/server/server-sidebar";
+import { MemberSidebar } from "@/components/members/members-sidebar";
 const ServerIdLayout = async ({
   children,
   params,
@@ -33,6 +34,9 @@ const ServerIdLayout = async ({
         <ServerSidebar serverId={params.serverId} />
       </div>
       <main className="h-full md:pl-60">{children}</main>
+      <div className="hidden md:flex h-full w-60 z-20 flex-col fixed inset-y-0 right-0">
+        <MemberSidebar serverId={params.serverId} />
+      </div>
     </div>
   );
 };
