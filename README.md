@@ -47,8 +47,8 @@ This project is a culmination of cutting-edge technologies and libraries, making
 
 Before you embark on your journey through this Discord Clone, make sure you have the following prerequisites:
 
-- Node.js (insert version here)
-- npm (insert version here)
+- Node.js v18.16.1
+- npm v9.5.1
 - Your favorite code editor
 - A burning passion for Discord and creativity
 
