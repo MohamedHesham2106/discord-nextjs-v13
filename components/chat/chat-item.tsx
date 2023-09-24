@@ -90,6 +90,7 @@ export const ChatItem = ({
   const isPDF = fileType === "pdf" && fileUrl;
   const isImage = !isPDF && fileUrl;
   const isLoading = form.formState.isSubmitting;
+  
   const onMemebrClickHandler = () => {
     if (member.id === currentMember.id) return;
     router.push(`/server/${params?.serverId}/conversations/${member.id}`);

@@ -11,42 +11,55 @@ export default async function handler(
   try {
     const profile = await currentProfilePages(req);
     const { content, fileUrl } = req.body;
-    const { serverId, channelId } = req.query;
+    const { conversationId } = req.query;
     if (!profile) return res.status(401).json({ message: "Unauthorized" });
     if (!content && !fileUrl)
       return res.status(400).json({ message: "Bad request" });
-    if (!serverId || !channelId)
+    if (!conversationId)
       return res.status(400).json({ message: "Bad request" });
-    const server = await prisma.server.findFirst({
+    const conversation = await prisma.conversation.findFirst({
       where: {
-        id: serverId as string,
-        members: {
-          some: {
-            profileId: profile.id,
+        id: conversationId as string,
+        OR: [
+          {
+            memberOne: {
+              profileId: profile.id,
+            },
+          },
+          {
+            memberTwo: {
+              profileId: profile.id,
+            },
+          },
+        ],
+      },
+      include: {
+        memberOne: {
+          include: {
+            profile: true,
+          },
+        },
+        memberTwo: {
+          include: {
+            profile: true,
           },
         },
       },
-      include: {
-        members: true,
-      },
     });
-    if (!server) return res.status(404).json({ message: "Server not found" });
-    const channel = await prisma.channel.findFirst({
-      where: {
-        id: channelId as string,
-        serverId: server.id,
-      },
-    });
-    if (!channel) return res.status(404).json({ message: "Channel not found" });
-    const member = server.members.find(
-      (member) => member.profileId === profile.id
-    );
+    if (!conversation)
+      return res.status(404).json({ message: "Conversation not found" });
+
+    const member =
+      conversation.memberOne.profileId === profile.id
+        ? conversation.memberOne
+        : conversation.memberTwo;
+
     if (!member) return res.status(401).json({ message: "Unauthorized" });
-    const message = await prisma.message.create({
+    const message = await prisma.directMessage.create({
       data: {
         content,
         fileUrl,
-        channelId: channel.id as string,
+        conversationId: conversation.id as string,
         memberId: member.id,
       },
       include: {
@@ -57,7 +70,7 @@ export default async function handler(
         },
       },
     });
-    const key = `chat:${channelId}:messages`;
+    const key = `chat:${conversationId}:messages`;
     res?.socket?.server?.io?.emit(key, message);
     return res.status(200).json(message);
   } catch (error) {

@@ -1,4 +1,4 @@
-import { currentProfilePages } from "@/lib/current-profile pages";
+import { currentProfilePages } from "@/lib/current-profile-pages";
 import { NextApiResponseServerIo } from "@/types";
 import { NextApiRequest } from "next";
 import { prisma } from "@/lib/db";
